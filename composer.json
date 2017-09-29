@@ -1,6 +1,7 @@
 {
     "name": "saro0h/to-do-list",
     "license": "proprietary",
+    "description": "Project 8 of the PHP / Symfony OpenClassroom application developer path",
     "type": "project",
     "autoload": {
         "psr-4": {
