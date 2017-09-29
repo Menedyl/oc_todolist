@@ -1,6 +1,7 @@
 {
     "name": "saro0h/to-do-list",
     "license": "proprietary",
+    "description": "Project 8 of the PHP / Symfony OpenClassroom application developer path",
     "type": "project",
     "autoload": {
         "psr-4": {
@@ -18,7 +19,7 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "symfony/symfony": "3.1.*",
+        "symfony/symfony": "3.3.*",
         "doctrine/orm": "^2.5",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
@@ -27,7 +28,9 @@
         "symfony/polyfill-apcu": "^1.0",
         "sensio/distribution-bundle": "^5.0",
         "sensio/framework-extra-bundle": "^3.0.2",
-        "incenteev/composer-parameter-handler": "^2.0"
+        "incenteev/composer-parameter-handler": "^2.0",
+        "phpunit/phpunit": "^6.3",
+        "twig/twig": "^2.4"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
