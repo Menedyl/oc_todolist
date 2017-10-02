@@ -15,7 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class testCommand extends Command
 {
-
     protected function configure()
     {
         $this
@@ -54,9 +53,5 @@ class testCommand extends Command
         $drop->run($dropInput, $output);
         $create->run($createInput, $output);
         $update->run($updateInput, $output);
-
-
     }
-
-
 }
