@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * Date: 02/10/2017
  * Time: 15:51
  */
-class testCommand extends Command
+class TestCommand extends Command
 {
     protected function configure()
     {
