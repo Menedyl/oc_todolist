@@ -30,7 +30,7 @@ class UserTest extends WebTestCase
 
         $form = $crawler->selectButton('Ajouter')->form();
 
-        $form['user[username]'] = 'Mickael';
+        $form['user[username]'] = 'Nicolas';
         $form['user[password][first]'] = 'test';
         $form['user[password][second]'] = 'test';
         $form['user[email]'] = 'nicolas@gmail.com';

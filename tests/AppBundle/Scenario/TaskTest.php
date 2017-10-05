@@ -27,18 +27,15 @@ class TaskTest extends WebTestCase
 
     public function testTaskCreate()
     {
-        $crawler = $this->client->request('GET', '/login');
-
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
-
-        $link = $crawler->selectLink('Créer une nouvelle tâche')->link();
-
-        $crawler = $this->client->click($link);
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks/create',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
         $form = $crawler->selectButton('Ajouter')->form();
 
@@ -54,22 +51,15 @@ class TaskTest extends WebTestCase
 
     public function testTaskEdit()
     {
-        $crawler = $this->client->request('GET', '/login');
-
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
-
-        $link = $crawler->selectLink('Consulter la liste des tâches à faire')->link();
-
-        $crawler = $this->client->click($link);
-
-        $link = $crawler->selectLink('Se lever')->link();
-
-        $crawler = $this->client->click($link);
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks/1/edit',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
         $form = $crawler->selectButton('Modifier')->form();
 
@@ -85,18 +75,15 @@ class TaskTest extends WebTestCase
 
     public function testTaskToggleOn()
     {
-        $crawler = $this->client->request('GET', '/login');
-
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
-
-        $link = $crawler->selectLink('Consulter la liste des tâches à faire')->link();
-
-        $crawler = $this->client->click($link);
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
         $form = $crawler->selectButton('Marquer comme faite')->form();
 
@@ -107,18 +94,15 @@ class TaskTest extends WebTestCase
 
     public function testTaskToggleOff()
     {
-        $crawler = $this->client->request('GET', '/login');
-
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
-
-        $link = $crawler->selectLink('Consulter la liste des tâches à faire')->link();
-
-        $crawler = $this->client->click($link);
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
         $form = $crawler->selectButton('Marquer non terminée')->form();
 
@@ -129,18 +113,16 @@ class TaskTest extends WebTestCase
 
     public function testTaskDelete()
     {
-        $crawler = $this->client->request('GET', '/login');
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
-
-        $link = $crawler->selectLink('Consulter la liste des tâches à faire')->link();
-
-        $crawler = $this->client->click($link);
 
         $form = $crawler->selectButton('Supprimer')->form();
 

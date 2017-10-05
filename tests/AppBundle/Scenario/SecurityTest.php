@@ -41,14 +41,15 @@ class SecurityTest extends WebTestCase
 
     public function testLogout()
     {
-        $crawler = $this->client->request('GET', '/login');
-
-        $form = $crawler->selectButton('Se connecter')->form();
-
-        $form['_username'] = 'Nicolas';
-        $form['_password'] = 'test';
-
-        $crawler = $this->client->submit($form);
+        $crawler = $this->client->request(
+            'GET',
+            '/',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
 
         $link = $crawler->selectLink('Se déconnecter')->link();
 
