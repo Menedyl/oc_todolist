@@ -30,7 +30,6 @@ class SecurityTest extends WebTestCase
         $crawler = $this->client->request('GET', '/login');
 
         $form = $crawler->selectButton('Se connecter')->form();
-
         $form['_username'] = 'Nicolas';
         $form['_password'] = 'test';
 

@@ -9,6 +9,8 @@
 namespace AppBundle\Scenario;
 
 
+use AppBundle\Entity\Task;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -18,11 +20,15 @@ class TaskTest extends WebTestCase
     /** @var Client $client */
     private $client = null;
 
+    /** @var EntityManagerInterface $manager */
+    private $manager;
+
 
     public function setUp()
     {
         $this->client = static::createClient();
         $this->client->followRedirects();
+        $this->manager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     public function testTaskCreate()
@@ -38,22 +44,23 @@ class TaskTest extends WebTestCase
             ]);
 
         $form = $crawler->selectButton('Ajouter')->form();
-
         $form['task[title]'] = 'Se lever';
         $form['task[content]'] = 'Commencer la journée en se réveillant tôt !';
 
         $crawler = $this->client->submit($form);
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été ajoutée")')->count());
-
         $this->assertSame(1, $crawler->filter('h4>a:contains("Se lever")')->count());
     }
 
     public function testTaskEdit()
     {
+        /** @var Task $task */
+        $task = $this->manager->getRepository(Task::class)->findOneBy(['title' => 'Se lever']);
+
         $crawler = $this->client->request(
             'GET',
-            '/tasks/1/edit',
+            '/tasks/' . $task->getId() . '/edit',
             [],
             [],
             [
@@ -65,11 +72,9 @@ class TaskTest extends WebTestCase
 
         $form['task[title]'] = 'Se coucher';
         $form['task[content]'] = 'Finir la journée en se couchant tôt !';
-
         $crawler = $this->client->submit($form);
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été modifiée")')->count());
-
         $this->assertSame(1, $crawler->filter('h4>a:contains("Se coucher")')->count());
     }
 
