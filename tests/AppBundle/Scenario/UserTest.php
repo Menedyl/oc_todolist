@@ -2,9 +2,9 @@
 
 namespace AppBundle\Scenario;
 
+use AppBundle\RandomString;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 
 /**
  * Created by PhpStorm.
@@ -14,6 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class UserTest extends WebTestCase
 {
+    use RandomString;
+
+
     /** @var Client $client */
     private $client = null;
 
@@ -24,15 +27,18 @@ class UserTest extends WebTestCase
         $this->client->followRedirects();
     }
 
+
     public function testCreateUser()
     {
         $crawler = $this->client->request('GET', '/users/create');
 
+        $string = $this->randomString(7);
+
         $form = $crawler->selectButton('Ajouter')->form();
-        $form['user[username]'] = 'Menedyl';
+        $form['user[username]'] = $string;
         $form['user[password][first]'] = 'test';
         $form['user[password][second]'] = 'test';
-        $form['user[email]'] = 'menedyl@gmail.com';
+        $form['user[email]'] = $string . '@gmail.com';
 
         $crawler = $this->client->submit($form);
 
