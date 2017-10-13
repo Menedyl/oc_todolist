@@ -70,16 +70,14 @@ class TaskTest extends WebTestCase
                 'PHP_AUTH_PW' => 'test'
             ]);
 
-        $string = $this->randomString(8);
-
         $form = $crawler->selectButton('Modifier')->form();
 
-        $form['task[title]'] = $string;
+        $form['task[title]'] = 'Se coucher';
         $form['task[content]'] = 'Finir la journée en se couchant tôt !';
         $crawler = $this->client->submit($form);
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été modifiée")')->count());
-        $this->assertSame(1, $crawler->filter('h4>a:contains(' . $string . ')')->count());
+        $this->assertSame(1, $crawler->filter('h4>a:contains("Se coucher")')->count());
     }
 
     public function testTaskToggleOn()
@@ -120,7 +118,27 @@ class TaskTest extends WebTestCase
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("été marquée comme non terminée")')->count());
     }
 
-    public function testTaskDelete()
+    public function testTaskDelete_WithBadUser()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Mickael',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $form = $crawler->filter('div.thumbnail:contains("Se coucher")')->selectButton('Supprimer')->form();
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertSame(1, $crawler->filter('div.alert-danger:contains("Vous ne pouvez pas supprimer un tâche d\'un autre auteur.")')->count());
+        $this->assertSame(1, $crawler->filter('div.thumbnail:contains("Se coucher")')->count());
+    }
+
+    public function testTaskDelete_WithGoodUser()
     {
         $crawler = $this->client->request(
             'GET',
@@ -132,12 +150,52 @@ class TaskTest extends WebTestCase
                 'PHP_AUTH_PW' => 'test'
             ]);
 
-
-        $form = $crawler->selectButton('Supprimer')->form();
+        $form = $crawler->filter('div.thumbnail:contains("Se coucher")')->selectButton('Supprimer')->form();
 
         $crawler = $this->client->submit($form);
 
-        $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été supprimée")')->count());
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été supprimée.")')->count());
+        $this->assertSame(0, $crawler->filter('div.thumbnail:contains("Se coucher")')->count());
+    }
+
+    public function testTaskDelete_WithRoleUserOnAnonymousAuthor()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Mickael',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $form = $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->selectButton('Supprimer')->form();
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertSame(1, $crawler->filter('div.alert-danger:contains("Vous ne pouvez pas supprimer un tâche d\'un autre auteur.")')->count());
+        $this->assertSame(1, $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->count());
+    }
+
+    public function testTaskDelete_WithRoleAdminOnAnonymousAuthor()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/tasks',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $form = $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->selectButton('Supprimer')->form();
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été supprimée.")')->count());
+        $this->assertSame(0, $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->count());
     }
 
 }
