@@ -2,7 +2,9 @@
 
 namespace AppBundle\Scenario;
 
+use AppBundle\Entity\User;
 use AppBundle\RandomString;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -20,11 +22,15 @@ class UserTest extends WebTestCase
     /** @var Client $client */
     private $client = null;
 
+    /** @var EntityManagerInterface */
+    private $manager;
+
 
     public function setUp()
     {
         $this->client = static::createClient();
         $this->client->followRedirects();
+        $this->manager = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
 
 
@@ -35,14 +41,43 @@ class UserTest extends WebTestCase
         $string = $this->randomString(7);
 
         $form = $crawler->selectButton('Ajouter')->form();
-        $form['user[username]'] = $string;
+        $form['user[username]'] = 'Thomas';
         $form['user[password][first]'] = 'test';
         $form['user[password][second]'] = 'test';
-        $form['user[email]'] = $string . '@gmail.com';
+        $form['user[email]'] = 'thomas@gmail.com';
+        $form['user[roles][0]']->setValue('ROLE_USER');
 
         $crawler = $this->client->submit($form);
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("L\'utilisateur a bien été ajouté")')->count());
+    }
+
+    public function testUserEdit()
+    {
+        /** @var User $user */
+        $user = $this->manager->getRepository(User::class)->findOneBy(['username' => 'Thomas']);
+
+        $crawler = $this->client->request(
+            'GET/',
+            '/users/' . $user->getId() . '/edit',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $form = $crawler->selectButton('Modifier')->form();
+
+        $string = $this->randomString(6);
+
+        $form['user[username]'] = $string;
+        $form['user[email]'] = $string . '@gmail.com';
+        $form['user[roles][0]']->setValue('ROLE_ADMIN');
+
+        $crawler = $this->client->submit($form);
+
+        $this->assertSame(1, $crawler->filter('div.alert-success:contains("L\'utilisateur a bien été modifié")')->count());
     }
 
 }
