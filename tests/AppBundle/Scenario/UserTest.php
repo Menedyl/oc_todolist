@@ -29,11 +29,10 @@ class UserTest extends WebTestCase
         $crawler = $this->client->request('GET', '/users/create');
 
         $form = $crawler->selectButton('Ajouter')->form();
-
-        $form['user[username]'] = 'Nicolas';
+        $form['user[username]'] = 'Menedyl';
         $form['user[password][first]'] = 'test';
         $form['user[password][second]'] = 'test';
-        $form['user[email]'] = 'nicolas@gmail.com';
+        $form['user[email]'] = 'menedyl@gmail.com';
 
         $crawler = $this->client->submit($form);
 

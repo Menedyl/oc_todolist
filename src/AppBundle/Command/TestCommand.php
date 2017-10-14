@@ -18,8 +18,8 @@ class TestCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('test:db:init')
-            ->setDescription('Drop, Create and Update the test database');
+            ->setName('database:initialization')
+            ->setDescription('Execute "database:drop, database:create, update:schema, fixtures:load" in the database');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -33,6 +33,7 @@ class TestCommand extends Command
 
         $dropInput = new ArrayInput($dropArgs);
 
+
         $create = $this->getApplication()->find('doctrine:database:create');
         $createArgs = [
             'command' => 'doctrine:database:create',
@@ -40,6 +41,7 @@ class TestCommand extends Command
         ];
 
         $createInput = new ArrayInput($createArgs);
+
 
         $update = $this->getApplication()->find('doctrine:schema:update');
         $updateArgs = [
@@ -50,8 +52,19 @@ class TestCommand extends Command
 
         $updateInput = new ArrayInput($updateArgs);
 
+
+        $fixtures = $this->getApplication()->find('doctrine:fixtures:load');
+        $fixturesArgs = [
+            'command' => 'doctrine:fixtures:load'
+        ];
+
+        $fixturesInput = new ArrayInput($fixturesArgs);
+
+
         $drop->run($dropInput, $output);
         $create->run($createInput, $output);
         $update->run($updateInput, $output);
+        $fixtures->run($fixturesInput, $output);
+
     }
 }
