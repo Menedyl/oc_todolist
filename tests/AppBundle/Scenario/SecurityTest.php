@@ -56,4 +56,35 @@ class SecurityTest extends WebTestCase
 
         $this->assertSame(1, $crawler->filter('img.slide-image')->count());
     }
+
+    public function testAccessPage_Users_WithRoleAdmin()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/users',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Nicolas',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $this->assertEquals(1, $crawler->filter('h1:contains("Liste des utilisateurs")')->count());
+    }
+
+    public function testAccessPage_Users_WithoutRoleAdmin()
+    {
+        $crawler = $this->client->request(
+            'GET',
+            '/users',
+            [],
+            [],
+            [
+                'PHP_AUTH_USER' => 'Mickael',
+                'PHP_AUTH_PW' => 'test'
+            ]);
+
+        $this->assertEquals(1, $crawler->filter('body:contains("Accès refusé !")')->count());
+
+    }
 }
