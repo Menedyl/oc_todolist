@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -40,11 +41,17 @@ class Task
      */
     private $isDone;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    private $author;
 
-    public function __construct()
+
+    public function __construct($author = null)
     {
         $this->createdAt = new \Datetime();
         $this->isDone = false;
+        $this->author = $author;
     }
 
     public function getId()
@@ -90,5 +97,30 @@ class Task
     public function toggle($flag)
     {
         $this->isDone = $flag;
+    }
+
+    /**
+     * @return UserInterface
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param UserInterface $author
+     */
+    public function setAuthor(UserInterface $author)
+    {
+        $this->author = $author;
+    }
+
+    public function asAuthor()
+    {
+        if ($this->author instanceof UserInterface) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

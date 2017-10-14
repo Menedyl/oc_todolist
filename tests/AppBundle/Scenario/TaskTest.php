@@ -10,12 +10,14 @@ namespace AppBundle\Scenario;
 
 
 use AppBundle\Entity\Task;
+use AppBundle\RandomString;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class TaskTest extends WebTestCase
 {
+    use RandomString;
 
     /** @var Client $client */
     private $client = null;
@@ -68,14 +70,16 @@ class TaskTest extends WebTestCase
                 'PHP_AUTH_PW' => 'test'
             ]);
 
+        $string = $this->randomString(8);
+
         $form = $crawler->selectButton('Modifier')->form();
 
-        $form['task[title]'] = 'Se coucher';
+        $form['task[title]'] = $string;
         $form['task[content]'] = 'Finir la journée en se couchant tôt !';
         $crawler = $this->client->submit($form);
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été modifiée")')->count());
-        $this->assertSame(1, $crawler->filter('h4>a:contains("Se coucher")')->count());
+        $this->assertSame(1, $crawler->filter('h4>a:contains(' . $string . ')')->count());
     }
 
     public function testTaskToggleOn()
