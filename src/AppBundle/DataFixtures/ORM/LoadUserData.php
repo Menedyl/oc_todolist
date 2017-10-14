@@ -26,12 +26,14 @@ class LoadUserData extends Fixture
         $user1->setUsername('Mickael');
         $user1->setEmail('mickael@gmail.com');
         $user1->setPassword($encoder->encodePassword($user1, 'test'));
+        $user1->setRoles('ROLE_USER');
 
-        $user2 = new User();
         $user2 = new User();
         $user2->setUsername('Nicolas');
         $user2->setEmail('nicolas@gmail.com');
         $user2->setPassword($encoder->encodePassword($user2, 'test'));
+        $user2->setRoles('ROLE_ADMIN');
+
 
         $manager->persist($user1);
         $manager->persist($user2);

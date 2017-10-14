@@ -24,14 +24,18 @@ class UserController extends Controller
     public function createAction(Request $request)
     {
         $user = new User();
+
         $form = $this->createForm(UserType::class, $user);
+
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $em = $this->getDoctrine()->getManager();
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles($user->getRoles()[0][0]);
 
             $em->persist($user);
             $em->flush();
@@ -56,6 +60,8 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
+            $user->setRoles($user->getRoles()[0][0]);
+
 
             $this->getDoctrine()->getManager()->flush();
 

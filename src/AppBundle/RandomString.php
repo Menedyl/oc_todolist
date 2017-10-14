@@ -12,7 +12,6 @@ trait RandomString
 {
     public function randomString(int $value)
     {
-
         $characters = 'azertyuiopqsdfghjklmwxcvbn';
         $charactersLength = strlen($characters);
 
