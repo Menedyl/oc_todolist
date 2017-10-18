@@ -1,18 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Menedyl
- * Date: 10/10/2017
- * Time: 17:23
- */
 
 namespace AppBundle\DataFixtures\ORM;
-
 
 use AppBundle\Entity\Task;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
+/**
+ * Class LoadTaskData
+ * @package AppBundle\DataFixtures\ORM
+ * @codeCoverageIgnore
+ */
 class LoadTaskData extends Fixture
 {
     public function load(ObjectManager $manager)

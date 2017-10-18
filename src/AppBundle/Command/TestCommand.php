@@ -8,10 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Created by PhpStorm.
- * User: Menedyl
- * Date: 02/10/2017
- * Time: 15:51
+ * @codeCoverageIgnore
  */
 class TestCommand extends Command
 {

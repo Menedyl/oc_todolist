@@ -40,9 +40,9 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="simple_array")
      */
-    private $roles;
+    private $roles = [];
 
 
     public function getId()
@@ -87,10 +87,10 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return [$this->roles];
+        return $this->roles;
     }
 
-    public function setRoles($roles)
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
     }

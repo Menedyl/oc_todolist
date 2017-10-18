@@ -18,6 +18,9 @@
             <file>tests/AppBundle/Scenario/SecurityTest.php</file>
             <file>tests/AppBundle/Scenario/TaskTest.php</file>
         </testsuite>
+        <testsuite name="unit">
+            <file>tests/AppBundle/Entity/TaskTest.php</file>
+        </testsuite>
     </testsuites>
 
     <filter>
