@@ -3,8 +3,8 @@
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -26,16 +26,24 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'Tapez le mot de passe à nouveau'],
             ])
             ->add('email', EmailType::class, ['label' => 'Adresse email'])
-            ->add('roles', CollectionType::class, [
+            ->add('roles', ChoiceType::class, [
+                'choices' => [
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN'
+                ],
                 'label' => 'Choisissez le type de rôle',
-                'entry_type' => ChoiceType::class,
-                'entry_options' => [
-                    'choices' => [
-                        'Utilisateur' => 'ROLE_USER',
-                        'Administrateur' => 'ROLE_ADMIN'
-                    ],
-                    'label' => false
-                ]
             ]);
+
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesAsArray) {
+                    // transform the array to a string
+                    return implode(', ', $rolesAsArray);
+                },
+                function ($rolesAsString) {
+                    // transform the string back to an array
+                    return explode(', ', $rolesAsString);
+                }
+            ));
     }
 }

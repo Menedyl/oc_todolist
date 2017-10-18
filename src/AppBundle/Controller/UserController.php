@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,6 +13,7 @@ class UserController extends Controller
 {
     /**
      * @Route("/users", name="user_list")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function listAction()
     {
@@ -35,7 +37,6 @@ class UserController extends Controller
             $em = $this->getDoctrine()->getManager();
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
-            $user->setRoles($user->getRoles()[0][0]);
 
             $em->persist($user);
             $em->flush();
@@ -50,6 +51,7 @@ class UserController extends Controller
 
     /**
      * @Route("/users/{id}/edit", name="user_edit")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function editAction(User $user, Request $request)
     {
@@ -60,7 +62,6 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($password);
-            $user->setRoles($user->getRoles()[0][0]);
 
 
             $this->getDoctrine()->getManager()->flush();

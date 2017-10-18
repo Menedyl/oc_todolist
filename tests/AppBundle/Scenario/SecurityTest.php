@@ -84,7 +84,6 @@ class SecurityTest extends WebTestCase
                 'PHP_AUTH_PW' => 'test'
             ]);
 
-        $this->assertEquals(1, $crawler->filter('body:contains("Accès refusé !")')->count());
-
+        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 }

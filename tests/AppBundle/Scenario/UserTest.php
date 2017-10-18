@@ -3,7 +3,7 @@
 namespace AppBundle\Scenario;
 
 use AppBundle\Entity\User;
-use AppBundle\RandomString;
+use AppBundleTests\RandomString;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -45,7 +45,7 @@ class UserTest extends WebTestCase
         $form['user[password][first]'] = 'test';
         $form['user[password][second]'] = 'test';
         $form['user[email]'] = 'thomas@gmail.com';
-        $form['user[roles][0]']->setValue('ROLE_USER');
+        $form['user[roles]'] = 'ROLE_USER';
 
         $crawler = $this->client->submit($form);
 
@@ -73,7 +73,7 @@ class UserTest extends WebTestCase
 
         $form['user[username]'] = $string;
         $form['user[email]'] = $string . '@gmail.com';
-        $form['user[roles][0]']->setValue('ROLE_ADMIN');
+        $form['user[roles]'] = 'ROLE_ADMIN';
 
         $crawler = $this->client->submit($form);
 

@@ -10,10 +10,11 @@ namespace AppBundle\Scenario;
 
 
 use AppBundle\Entity\Task;
-use AppBundle\RandomString;
+use AppBundleTests\RandomString;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
 
 class TaskTest extends WebTestCase
 {
@@ -132,10 +133,10 @@ class TaskTest extends WebTestCase
 
         $form = $crawler->filter('div.thumbnail:contains("Se coucher")')->selectButton('Supprimer')->form();
 
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
 
-        $this->assertSame(1, $crawler->filter('div.alert-danger:contains("Vous ne pouvez pas supprimer un tâche d\'un autre auteur.")')->count());
-        $this->assertSame(1, $crawler->filter('div.thumbnail:contains("Se coucher")')->count());
+        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+
     }
 
     public function testTaskDelete_WithGoodUser()
@@ -172,10 +173,10 @@ class TaskTest extends WebTestCase
 
         $form = $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->selectButton('Supprimer')->form();
 
-        $crawler = $this->client->submit($form);
+        $this->client->submit($form);
 
-        $this->assertSame(1, $crawler->filter('div.alert-danger:contains("Vous ne pouvez pas supprimer un tâche d\'un autre auteur.")')->count());
-        $this->assertSame(1, $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->count());
+        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+
     }
 
     public function testTaskDelete_WithRoleAdminOnAnonymousAuthor()
