@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Task;
 use AppBundle\Form\TaskType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -44,11 +45,10 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/edit", name="task_edit")
+     * @Security("is_granted('edit', task)")
      */
     public function editAction(Task $task, Request $request)
     {
-        $this->denyAccessUnlessGranted('edit', $task);
-
         $form = $this->createForm(TaskType::class, $task);
 
         $form->handleRequest($request);
@@ -88,11 +88,10 @@ class TaskController extends Controller
 
     /**
      * @Route("/tasks/{id}/delete", name="task_delete")
+     * @Security("is_granted('delete', task)")
      */
     public function deleteTaskAction(Task $task)
     {
-        $this->denyAccessUnlessGranted('delete', $task);
-
         $em = $this->getDoctrine()->getManager();
         $em->remove($task);
         $em->flush();
