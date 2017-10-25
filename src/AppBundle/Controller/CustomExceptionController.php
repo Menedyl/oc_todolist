@@ -18,6 +18,8 @@ class CustomExceptionController extends ExceptionController
 {
     public function showAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
+
+
         $code = $exception->getStatusCode();
 
         return new Response(
@@ -30,6 +32,7 @@ class CustomExceptionController extends ExceptionController
                 )
             ),
             $code);
+
     }
 
 }
