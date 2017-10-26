@@ -28,7 +28,7 @@ class SecurityController extends Controller
      * @Route("/login_check", name="login_check")
      * @codeCoverageIgnore
      */
-    public function loginCheck()
+    private function loginCheck()
     {
         // This code is never executed.
     }
@@ -37,7 +37,7 @@ class SecurityController extends Controller
      * @Route("/logout", name="logout")
      * @codeCoverageIgnore
      */
-    public function logoutCheck()
+    private function logoutCheck()
     {
         // This code is never executed.
     }
