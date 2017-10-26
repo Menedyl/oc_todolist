@@ -131,12 +131,7 @@ class TaskTest extends WebTestCase
                 'PHP_AUTH_PW' => 'test'
             ]);
 
-        $form = $crawler->filter('div.thumbnail:contains("Se coucher")')->selectButton('Supprimer')->form();
-
-        $this->client->submit($form);
-
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
-
+        $this->assertSame(0, $crawler->filter('div.thumbnail:contains("Test d\'une tâche !").form:contains("Supprimer")')->count());
     }
 
     public function testTaskDelete_WithGoodUser()
@@ -157,26 +152,6 @@ class TaskTest extends WebTestCase
 
         $this->assertSame(1, $crawler->filter('div.alert-success:contains("La tâche a bien été supprimée.")')->count());
         $this->assertSame(0, $crawler->filter('div.thumbnail:contains("Se coucher")')->count());
-    }
-
-    public function testTaskDelete_WithRoleUserOnAnonymousAuthor()
-    {
-        $crawler = $this->client->request(
-            'GET',
-            '/tasks',
-            [],
-            [],
-            [
-                'PHP_AUTH_USER' => 'Mickael',
-                'PHP_AUTH_PW' => 'test'
-            ]);
-
-        $form = $crawler->filter('div.thumbnail:contains("Test d\'une tâche !")')->selectButton('Supprimer')->form();
-
-        $this->client->submit($form);
-
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
-
     }
 
     public function testTaskDelete_WithRoleAdminOnAnonymousAuthor()
